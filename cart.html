@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style/cart.css">
+  <title>Keranjang Belanja</title>
+</head>
+<body>
+
+<header>
+  <button id="backToHomeBtn" style="margin-right:10px;">&larr; Back</button>
+  <h1>Keranjang Belanja</h1>
+</header>
+
+<section class="cart-list" id="cartList">
+  <!-- Daftar item keranjang akan dimuat di sini oleh JavaScript -->
+</section>
+
+<footer class="cart-footer">
+  <label>
+    <input type="checkbox" id="selectAll" /> Pilih Semua
+  </label>
+
+  <div class="info">
+    <div>Total Item: <span id="totalItems">0</span></div>
+    <div>Total Harga: <span id="totalPrice">Rp0</span></div>
+  </div>
+
+  <button id="checkoutBtn">Checkout</button>
+</footer>
+
+<script src="js/cart.js"></script>
+</body>
+</html>

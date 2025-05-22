@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style/dashboard.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">SIXTYLE</div>
+        <div class="nav-menu">
+            <a href="index.html">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#" id="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <p>Manage your products and Accounts</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <a href="#productTable" style="text-decoration: none;">
+            <div class="stat-card products">
+                <i class="fas fa-box icon"></i>
+                <h3 id="totalProducts">-</h3>
+                <p>Total Products</p>
+            </div>
+            </a>
+            <a href="#accManagement" style="text-decoration: none;">
+            <div class="stat-card users">
+                <i class="fas fa-users icon"></i>
+                <h3>0</h3>
+                <p>Total Users</p>
+            </div>
+            </a>
+        </div>
+
+        <!-- Action Section -->
+        <div class="action-section">
+            <h2 class="section-title">Product Management</h2>
+            <button class="add-product-btn" id="addProductButton">
+                <i class="fas fa-plus"></i>
+                Add New Product
+            </button>
+        </div>
+
+        <!-- Product Table -->
+        <div class="table-container">
+            <table class="product-table" id="productTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Stock</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <tr>
+                        <td colspan="8" class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Loading products...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Account Management Table -->
+        <div class="action-section" style="margin-top: 3rem;">
+            <h2 class="section-title" id="accManagement">Account Management</h2>
+                <button class="new-user-btn" id="newUserButton">
+                <i class="fas fa-plus"></i>
+                Create New User
+            </button>
+        </div>
+        <div class="table-container">
+            <table class="product-table">
+                <thead> 
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr>
+                        <td colspan="4" class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Loading users...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
