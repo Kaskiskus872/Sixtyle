@@ -1,5 +1,4 @@
-
-    const api_baseUrl = 'https://project-pkk-production.up.railway.app';
+const api_baseUrl = 'https://project-pkk-production.up.railway.app';
     const token = localStorage.getItem('jwtToken');
     const ordersContainer = document.getElementById('orders-container');
     const paymentModal = document.getElementById('paymentModal');
@@ -180,7 +179,8 @@
           <div class="h-16 w-16 bg-gray-100 rounded overflow-hidden flex-shrink-0">
             <img src="${product.imageUrl || 'https://via.placeholder.com/100'}" 
                 alt="${product.name || ''}" 
-                class="w-full h-full object-cover">
+                class="w-full h-full object-cover"
+                onerror="this.onerror=null;this.src='https://via.placeholder.com/100';">
           </div>
           <div class="ml-4 flex-1">
             <h3 class="font-medium text-gray-800">${product.name || 'Produk tidak tersedia'}</h3>
@@ -223,9 +223,12 @@
         `;
       } else {
         orderSummary.innerHTML = `
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center gap-2">
             <p class="font-bold text-lg text-gray-800">Total: Rp${order.totalPrice.toLocaleString()}</p>
             <span class="text-green-600 font-medium">Pembayaran Berhasil</span>
+            <button class="delete-history-btn px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors" data-order-id="${order.id}">
+              Hapus Riwayat
+            </button>
           </div>
         `;
       }
@@ -245,6 +248,16 @@
           payBtn.addEventListener('click', () => {
             openPaymentModal(order.id);
           });
+        }, 0);
+      } else {
+        // Event listener untuk tombol hapus riwayat pada order success
+        setTimeout(() => {
+          const deleteBtn = orderEl.querySelector('.delete-history-btn');
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+              deleteOrderHistory(order.id);
+            });
+          }
         }, 0);
       }
       
@@ -391,6 +404,53 @@
         radio.checked = true;
       });
     });
+
+    // Tambahkan fungsi untuk hapus riwayat order success
+    async function deleteOrderHistory(orderId) {
+      Swal.fire({
+        title: 'Hapus Riwayat?',
+        text: 'Anda yakin ingin menghapus riwayat pesanan ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const res = await fetch(`${api_baseUrl}/orders/${orderId}`, {
+              method: 'DELETE',
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Riwayat pesanan berhasil dihapus',
+                confirmButtonText: 'OK'
+              });
+              fetchOrders();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal menghapus riwayat pesanan',
+                confirmButtonText: 'OK'
+              });
+            }
+          } catch (err) {
+            console.error('Error:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal',
+              text: 'Gagal menghapus riwayat pesanan',
+              confirmButtonText: 'OK'
+            });
+          }
+        }
+      });
+    }
 
     // Initialize the page
     fetchOrders();
