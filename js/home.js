@@ -1,9 +1,9 @@
-const api_baseUrl = 'https://project-pkk-production.up.railway.app'; // Ganti dengan URL API lo
-// const api_baseUrl = 'http://localhost:3000'; // Ganti dengan URL API lo
+const api_baseUrl = 'https://project-pkk-production.up.railway.app';
+// const api_baseUrl = 'http://localhost:3000'; 
 let allProducts = [];
 let filteredProducts = [];
 
-// --- FILTER & SEARCH ---
+// FILTER & SEARCH
 const categoryFilter = document.getElementById('categoryFilter');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
