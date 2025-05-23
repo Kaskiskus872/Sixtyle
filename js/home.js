@@ -254,13 +254,74 @@ document.getElementById("modalCartBtn").onclick = () => {
                 if (!ratings || !ratings.length) {
                     ratingsList.innerHTML = '<em>Belum ada ulasan.</em>';
                 } else {
-                    ratingsList.innerHTML = ratings.map(r => `
-                        <div style="border-bottom:1px solid #eee;padding:6px 0;">
+                    // Ambil userId & role dari token jika login
+                    let userId = null, userRole = null;
+                    if (isLoggedIn) {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        userId = payload.id;
+                        userRole = payload.role;
+                    }
+                    ratingsList.innerHTML = ratings.map(r => {
+                        // Tampilkan tombol hapus jika: admin, atau userId == r.userId
+                        const canDelete = isLoggedIn && (userRole === 'admin' || r.userId === userId);
+                        return `
+                        <div style="border-bottom:1px solid #eee;padding:6px 0;position:relative;">
                             <b>${r.user?.username || 'User'}</b> - 
                             <span style="color:gold;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span><br/>
                             <span>${r.feedback}</span>
+                            ${canDelete ? `<button class="delete-rating-btn" data-rating-id="${r.id}" style="position:absolute;right:0;top:0;background:#e53e3e;color:#fff;border:none;padding:2px 8px;border-radius:4px;cursor:pointer;">Hapus</button>` : ''}
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
+
+                    // Event listener tombol hapus rating
+                    document.querySelectorAll('.delete-rating-btn').forEach(btn => {
+                        btn.addEventListener('click', async function() {
+                            const ratingId = this.getAttribute('data-rating-id');
+                            Swal.fire({
+                                title: 'Hapus Ulasan?',
+                                text: 'Anda yakin ingin menghapus ulasan ini?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya, Hapus',
+                                cancelButtonText: 'Batal',
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    try {
+                                        const res = await fetch(`${api_baseUrl}/ratings/delete/${ratingId}`, {
+                                            method: 'DELETE',
+                                            headers: { Authorization: `Bearer ${token}` }
+                                        });
+                                        if (res.ok) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Ulasan berhasil dihapus',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            showProductModalById(product.id); // Refresh ulasan
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Gagal',
+                                                text: 'Gagal menghapus ulasan',
+                                                confirmButtonText: 'OK'
+                                            });
+                                        }
+                                    } catch (err) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: 'Gagal menghapus ulasan',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
                 }
             });
 
